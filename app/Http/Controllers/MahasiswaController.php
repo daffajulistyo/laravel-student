@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\mahasiswa;
 
 class MahasiswaController extends Controller
 {
@@ -24,7 +25,7 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        //
+        return view('form_tambah');
     }
 
     /**
@@ -35,7 +36,13 @@ class MahasiswaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Mahasiswa::create([
+            'nama' => $request->nama,
+            'nim' => $request->nim,
+            'tgl_lahir' => $request->tgl_lahir,
+        ]);
+
+        return redirect()->route('mahasiswa.index');
     }
 
     /**
@@ -46,7 +53,8 @@ class MahasiswaController extends Controller
      */
     public function show($id)
     {
-        //
+        $mahasiswa = Mahasiswa::where('id', $id)->first();
+        return view('profil_mahasiswa',['mahasiswa' => $mahasiswa]);
     }
 
     /**
@@ -57,7 +65,8 @@ class MahasiswaController extends Controller
      */
     public function edit($id)
     {
-        //
+        $dataMahasiswa = Mahasiswa::find($id);
+        return view('form_ubah',['mahasiswa' => $dataMahasiswa]);
     }
 
     /**
@@ -69,7 +78,14 @@ class MahasiswaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $mahasiswa = Mahasiswa::find($id);
+        $mahasiswa->nama = $request->nama;
+        $mahasiswa->nim = $request->nim;
+        $mahasiswa->tgl_lahir = $request->tgl_lahir;
+        $mahasiswa->save();
+
+        return redirect()->route('mahasiswa.index');
+
     }
 
     /**
@@ -80,6 +96,9 @@ class MahasiswaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $mahasiswa = Mahasiswa::find($id);
+        $mahasiswa -> delete();
+
+        return redirect()->route('mahasiswa.index');
     }
 }
